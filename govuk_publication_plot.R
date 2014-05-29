@@ -1,6 +1,6 @@
 ## This script reshapes the publication data and creates plots
 
-library(pbtools)
+library(pbtools) #source at github.com/petrbouchal/pbtools
 
 # Load data - this is created by govuk_publications_scrape.R
 
@@ -32,6 +32,7 @@ plot <- ggplot(dfs, aes(x=hour, y=value, fill=dayname)) +
   geom_bar(stat="identity",position = 'stack') +
   scale_fill_manual(values=ifgbasecolours) +
   scale_y_continuous(label=percent) +
+  scale_x_discrete(breaks=c('00','03','06','09','12','15','18','21')) +
   facet_wrap(~dayname, nrow=1)
 plot
 

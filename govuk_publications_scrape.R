@@ -2,7 +2,7 @@
 ## dataset, and creates a chart of publication by time in the week
 
 library(rjson)
-library(pbtools)
+library(pbtools) ## source at github.com/petrbouchal/pbtools
 library(RCurl)
 
 LoadCustomThemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
