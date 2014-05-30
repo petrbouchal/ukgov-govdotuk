@@ -28,6 +28,8 @@ mutate(display_type=as.character(display_type), # reformulate labels
 
 ## Plots
 
+LoadCustomThemes(ifgbasecolours,'Calibri')
+
 plot <- ggplot(dfs, aes(x=hour, y=value, fill=dayname)) +
   geom_bar(stat="identity",position = 'stack') +
   scale_fill_manual(values=ifgbasecolours) +
