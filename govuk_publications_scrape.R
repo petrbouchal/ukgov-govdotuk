@@ -4,6 +4,7 @@
 library(rjson)
 library(pbtools) ## source at github.com/petrbouchal/pbtools
 library(RCurl)
+library(httr)
 
 LoadCustomThemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
 
@@ -12,8 +13,9 @@ results <- list()
 temporaryFile <- tempfile()
 for (i in 1:500) {
   url <- paste0('https://www.gov.uk/government/publications.json?page=',i)
-  pubsfile <- download.file(url,destfile = temporaryFile, method='curl',quiet = T)
-  pubs <- readLines(temporaryFile)
+#   pubsfile <- download.file(url,destfile = temporaryFile, method='curl',quiet = T)
+  urlcon <- url(url)
+  pubs <- readLines(urlcon)
   pubsj <- fromJSON(pubs)
   results <- append(results, pubsj$results)
   if (i%%10==0) {print(i)} # print progress every 10 iterations
@@ -39,7 +41,7 @@ df$dayhour <- paste0(df$daynum, '_', df$hour)
 
 ## Save data if needed
 
-# save(df,'./data-output/500GovUKpublications.rda')
+save(df,file='./data-output/500GovUKpublications.rda')
 
 # Dig out organisation from HTML - TODO
 # df$orgname <- str_extract(df$organisations,)

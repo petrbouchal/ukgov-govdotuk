@@ -30,26 +30,27 @@ mutate(display_type=as.character(display_type), # reformulate labels
 
 LoadCustomThemes(ifgbasecolours,'Calibri')
 
-plot <- ggplot(dfs, aes(x=hour, y=value, fill=dayname)) +
+plot1 <- ggplot(dfs, aes(x=hour, y=value, fill=dayname)) +
   geom_bar(stat="identity",position = 'stack') +
-  scale_fill_manual(values=ifgbasecolours) +
+  scale_fill_manual(values=rev(ifgbasecolours[,1]), guide='none') +
   scale_y_continuous(label=percent) +
   scale_x_discrete(breaks=c('00','03','06','09','12','15','18','21')) +
-  facet_wrap(~dayname, nrow=1)
-plot
+  facet_wrap(~dayname, nrow=1) +
+  theme(strip.text=element_text(size=14, face='bold'))
+plot1
 
-plot <- ggplot(dfs, aes(x=hour, y=value, fill=display_type, group=display_type)) +
+plot2 <- ggplot(dfs, aes(x=hour, y=value, fill=display_type, group=display_type)) +
   geom_bar(stat="identity",position='dodge') +
   scale_fill_manual(values=ifgbasecolours) +
   scale_y_continuous(label=percent) +
-  facet_wrap(~dayname, nrow=1) 
-plot
+  facet_wrap(~dayname, nrow=1)
+plot2
 
-plot <- ggplot(dfs, aes(x=dayname, y=value, fill=dayname)) +
+plot3 <- ggplot(dfs, aes(x=dayname, y=value, fill=dayname)) +
   geom_bar(stat="identity",position = 'stack') +
   scale_y_continuous(label=percent) +
   scale_fill_manual(values=ifgbasecolours)
-plot
+plot3
 
 ## Stats
 
