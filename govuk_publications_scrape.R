@@ -6,16 +6,20 @@ library(pbtools) ## source at github.com/petrbouchal/pbtools
 library(RCurl)
 library(httr)
 
-LoadCustomThemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
+loadcustomthemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
 
 ## Load pages and create a long list of all results rows (list of lists)
 results <- list()
 temporaryFile <- tempfile()
 for (i in 1:500) {
   url <- paste0('https://www.gov.uk/government/publications.json?page=',i)
-#   pubsfile <- download.file(url,destfile = temporaryFile, method='curl',quiet = T)
-  urlcon <- url(url)
-  pubs <- readLines(urlcon)
+  # on Mac:
+  download.file(url,destfile = temporaryFile, method='curl',quiet = T)
+  pubs <- readLines(temporaryFile)
+  # on Windows
+#   urlcon <- url(url)
+#   pubs <- readLines(urlcon)
+  # turn into dataframe
   pubsj <- fromJSON(pubs)
   results <- append(results, pubsj$results)
   if (i%%10==0) {print(i)} # print progress every 10 iterations
