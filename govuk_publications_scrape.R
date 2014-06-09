@@ -40,7 +40,7 @@ df$date <- strptime(df$public_timestamp, format='%Y-%m-%dT%H:%M:%S')
 df$dayname <- wday(df$date,label = T)
 df$daynum <- wday(df$date,label = F)
 df$hour <- sprintf('%02s',hour(df$date))
-df$weekid <- paste0(week(df$date),'_',year(df$date))
+df$weekid <- as.numeric(paste0(year(df$date),week(df$date)))
 df$dayhour <- paste0(df$daynum, '_', df$hour)
 
 ## Save data if needed

@@ -15,15 +15,16 @@ dfs <- select(df, dayname, hour, dayhour, display_type, weekid) %>%
   ungroup() %>%  
   group_by(display_type) %>%
   mutate(counttype=n()) %>% # count by type
-  group_by(dayname, hour, dayhour, display_type) %>% 
+  group_by(dayname, hour, dayhour, display_type, weekid) %>% 
   mutate(sharedayhourtype=n()/counttype) %>% # rate by type per hour
   summarise(share_type=mean(sharedayhourtype),count_type=n(), # means
             count_all=mean(count_all),share_all=mean(share_dayhour)) %>%
   filter(display_type=='Transparency data') %>%
-  melt() %>% # reshape
+  melt(id.vars=c('dayname','hour','dayhour','display_type','weekid')) %>% # reshape
   #   filter(variable=='share_type' | variable=='share_all') %>%
   filter(variable=='share_type') %>%
   mutate(display_type=as.character(display_type), # reformulate labels
+         latestweek=ifelse(as.numeric(weekid)==as.numeric(paste0(year(now()),week(now()))),TRUE,FALSE),
          display_type=ifelse(variable=='share_all','All publications',display_type))
 
 ## Plots
@@ -35,9 +36,18 @@ plot1 <- ggplot(dfs, aes(x=hour, y=value, fill=dayname)) +
   scale_fill_manual(values=rev(ifgbasecolours[,1]), guide='none') +
   scale_y_continuous(label=percent) +
   scale_x_discrete(breaks=c('00','03','06','09','12','15','18','21')) +
-  facet_wrap(~dayname, nrow=1) +
+  facet_wrap(~ dayname, nrow=1) +
   theme(strip.text=element_text(size=14, face='bold'))
 plot1
+
+# plot1a <- ggplot(dfs, aes(x=hour, y=value, fill=dayname, group=display_type)) +
+#   geom_bar(stat="identity",position = 'stack') +
+#   scale_fill_manual(values=rev(ifgbasecolours[,1]), guide='none') +
+#   scale_y_continuous(label=percent) +
+#   scale_x_discrete(breaks=c('00','03','06','09','12','15','18','21')) +
+#   facet_grid(latestweek ~ dayname,drop = FALSE) +
+#   theme(strip.text=element_text(size=14, face='bold'))
+# plot1a
 
 plot2 <- ggplot(dfs, aes(x=hour, y=value, fill=display_type, group=display_type)) +
   geom_bar(stat="identity",position='dodge') +
