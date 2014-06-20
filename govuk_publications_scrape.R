@@ -6,19 +6,17 @@ library(pbtools) ## source at github.com/petrbouchal/pbtools
 library(RCurl)
 library(httr)
 
-loadcustomthemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
-
 ## Load pages and create a long list of all results rows (list of lists)
 results <- list()
 temporaryFile <- tempfile()
-for (i in 1:500) {
+for (i in 1:800) {
   url <- paste0('https://www.gov.uk/government/publications.json?page=',i)
   # on Mac:
-  download.file(url,destfile = temporaryFile, method='curl',quiet = T)
-  pubs <- readLines(temporaryFile)
+#   download.file(url,destfile = temporaryFile, method='curl',quiet = T)
+#   pubs <- readLines(temporaryFile)
   # on Windows
-#   urlcon <- url(url)
-#   pubs <- readLines(urlcon)
+  urlcon <- url(url)
+  pubs <- readLines(urlcon)
   # turn into dataframe
   pubsj <- fromJSON(pubs)
   results <- append(results, pubsj$results)
@@ -40,7 +38,7 @@ df$date <- strptime(df$public_timestamp, format='%Y-%m-%dT%H:%M:%S')
 df$dayname <- wday(df$date,label = T)
 df$daynum <- wday(df$date,label = F)
 df$hour <- sprintf('%02s',hour(df$date))
-df$weekid <- as.numeric(paste0(year(df$date),week(df$date)))
+df$weekid <- as.numeric(paste0(year(df$date),formatC(week(df$date), width = 2, format = "d", flag = "0")))
 df$dayhour <- paste0(df$daynum, '_', df$hour)
 
 ## Save data if needed
