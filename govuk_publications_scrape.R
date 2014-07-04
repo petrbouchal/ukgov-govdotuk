@@ -9,7 +9,7 @@ library(httr)
 ## Load pages and create a long list of all results rows (list of lists)
 results <- list()
 temporaryFile <- tempfile()
-for (i in 1:800) {
+for (i in 1:500) {
   url <- paste0('https://www.gov.uk/government/publications.json?page=',i)
   # on Mac:
 #   download.file(url,destfile = temporaryFile, method='curl',quiet = T)
