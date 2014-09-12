@@ -4,7 +4,7 @@ library(pbtools) #source at github.com/petrbouchal/pbtools
 
 # Load data - this is created by govuk_publications_scrape.R
 
-load('./data-output/500GovUKpublications.rda')
+load('./data-output/GovUK500publications.Rda')
 
 ## Reshape and create aggregate/proportions, and filter
 
