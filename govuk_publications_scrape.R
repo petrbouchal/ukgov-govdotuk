@@ -17,6 +17,7 @@ for (i in 1:500) {
   # on Windows
   urlcon <- url(url)
   pubs <- readLines(urlcon)
+  close(urlcon)
   # turn into dataframe
   pubsj <- fromJSON(pubs)
   results <- append(results, pubsj$results)
