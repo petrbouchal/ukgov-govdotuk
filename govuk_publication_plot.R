@@ -4,7 +4,8 @@ library(pbtools) #source at github.com/petrbouchal/pbtools
 
 # Load data - this is created by govuk_publications_scrape.R
 
-load('./data-output/GovUK500publications.Rda')
+load('./data-output/500GovUKpublications.rda')
+library(tidyr)
 
 ## Reshape and create aggregate/proportions, and filter
 
@@ -20,7 +21,7 @@ dfs <- select(df[1:20000,], dayname, hour, dayhour, display_type, weekid) %>%
   summarise(share_type=mean(sharedayhourtype),count_type=n(), # means
             count_all=mean(count_all),share_all=mean(share_dayhour)) %>%
   filter(display_type=='Transparency data') %>%
-  melt(id.vars=c('dayname','hour','dayhour','display_type','weekid')) %>% # reshape
+  gather(variable, value, 6:9) %>%
   #   filter(variable=='share_type' | variable=='share_all') %>%
   filter(variable=='share_type') %>%
   mutate(display_type=as.character(display_type), # reformulate labels
@@ -32,7 +33,7 @@ dfs <- select(df[1:20000,], dayname, hour, dayhour, display_type, weekid) %>%
 loadcustomthemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
 
 plot1 <- ggplot(dfs, aes(x=hour, y=value, fill=dayname)) +
-  geom_bar(stat="identity",position = 'stack') +
+  geom_bar(stat="identity",position = 'dodge') +
   scale_fill_manual(values=rev(ifgbasecolours[,1]), guide='none') +
   scale_y_continuous(label=percent) +
   scale_x_discrete(breaks=c('00','03','06','09','12','15','18','21')) +
@@ -66,5 +67,6 @@ plot3
 
 sum(dfs$value[as.numeric(dfs$hour)<15 & dfs$dayname!='Fri'])
 mean(dfs$value[as.numeric(dfs$hour)<15 & dfs$dayname!='Fri'])
+mean(dfs$value)
 sum(dfs$value[as.numeric(dfs$hour)>14 & dfs$dayname=='Fri'])
 mean(dfs$value[as.numeric(dfs$hour)>14 & dfs$dayname=='Fri'])
