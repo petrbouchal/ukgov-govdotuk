@@ -24,6 +24,7 @@ dfs <- select(df[1:20000,], dayname, hour, dayhour, display_type, weekid) %>%
   gather(variable, value, 6:9) %>%
   #   filter(variable=='share_type' | variable=='share_all') %>%
   filter(variable=='share_type') %>%
+  ungroup() %>% 
   mutate(display_type=as.character(display_type), # reformulate labels
          latestweek=ifelse(as.numeric(weekid)==as.numeric(paste0(year(now()),week(now()))),TRUE,FALSE),
          display_type=ifelse(variable=='share_all','All publications',display_type))

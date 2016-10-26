@@ -5,6 +5,7 @@ library(rjson)
 library(pbtools) ## source at github.com/petrbouchal/pbtools
 library(RCurl)
 library(httr)
+library(feather)
 
 ## Load pages and create a long list of all results rows (list of lists)
 results <- list()
@@ -35,7 +36,7 @@ json_file <- lapply(results, function(x) {
 df <- as.data.frame(do.call("rbind", json_file))
 
 # fix dates & create additional time/date vars
-df$date <- strptime(df$public_timestamp, format='%Y-%m-%dT%H:%M:%S')
+df$date <- as.POSIXct(strptime(df$public_timestamp, format='%Y-%m-%dT%H:%M:%S'))
 df$dayname <- wday(df$date,label = T)
 df$daynum <- wday(df$date,label = F)
 df$hour <- sprintf('%02s',hour(df$date))
@@ -45,6 +46,8 @@ df$dayhour <- paste0(df$daynum, '_', df$hour)
 ## Save data if needed
 
 save(df,file='./data-output/500GovUKpublications.rda')
+write.csv(df,file='./data-output/500GovUKpublications.csv')
+write_feather(df,'./data-output/500GovUKpublications.feather')
 
 # Dig out organisation from HTML - TODO
 # df$orgname <- str_extract(df$organisations,)
