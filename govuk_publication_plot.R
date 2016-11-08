@@ -1,11 +1,16 @@
 ## This script reshapes the publication data and creates plots
 
-library(pbtools) #source at github.com/petrbouchal/pbtools
+# library(pbtools) #source at github.com/petrbouchal/pbtools
 
 # Load data - this is created by govuk_publications_scrape.R
 
 load('./data-output/500GovUKpublications.rda')
 library(tidyr)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(feather)
 
 ## Reshape and create aggregate/proportions, and filter
 
@@ -31,11 +36,11 @@ dfs <- select(df[1:20000,], dayname, hour, dayhour, display_type, weekid) %>%
 
 ## Plots
 
-loadcustomthemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
+# loadcustomthemes(mycols=ifgbasecolours[,1],fontfamily = 'Calibri',tints = c(0.75,0.5,0.25))
 
 plot1 <- ggplot(dfs, aes(x=hour, y=value, fill=dayname)) +
   geom_bar(stat="identity",position = 'dodge') +
-  scale_fill_manual(values=rev(ifgbasecolours[,1]), guide='none') +
+  # scale_fill_manual(values=rev(ifgbasecolours[,1]), guide='none') +
   scale_y_continuous(label=percent) +
   scale_x_discrete(breaks=c('00','03','06','09','12','15','18','21')) +
   facet_wrap(~ dayname, nrow=1) +
@@ -53,15 +58,15 @@ plot1
 
 plot2 <- ggplot(dfs, aes(x=hour, y=value, fill=display_type, group=display_type)) +
   geom_bar(stat="identity",position='dodge') +
-  scale_fill_manual(values=ifgbasecolours) +
+  # scale_fill_manual(values=ifgbasecolours) +
   scale_y_continuous(label=percent) +
   facet_wrap(~dayname, nrow=1)
 plot2
 
 plot3 <- ggplot(dfs, aes(x=dayname, y=value, fill=dayname)) +
   geom_bar(stat="identity",position = 'stack') +
-  scale_y_continuous(label=percent) +
-  scale_fill_manual(values=ifgbasecolours)
+  # scale_fill_manual(values=ifgbasecolours) +
+  scale_y_continuous(label=percent)
 plot3
 
 ## Stats
