@@ -10,7 +10,7 @@ library(feather)
 ## Load pages and create a long list of all results rows (list of lists)
 results <- list()
 temporaryFile <- tempfile()
-for (i in 1:500) { # page range, 40 publications per page - change this as required
+for (i in 1:1575) { # page range, 40 publications per page - change this as required
   url <- paste0('https://www.gov.uk/government/publications.json?page=',i)
   # on Mac:
 #   download.file(url,destfile = temporaryFile, method='curl',quiet = T)
@@ -45,9 +45,9 @@ df$dayhour <- paste0(df$daynum, '_', df$hour)
 
 ## Save data if needed
 
-save(df,file='./data-output/500GovUKpublications.rda')
-write.csv(df,file='./data-output/500GovUKpublications.csv')
-write_feather(df,'./data-output/500GovUKpublications.feather')
+save(df,file='./data-output/63kGovUKpublications.rda')
+write.csv(df,file='./data-output/63kGovUKpublications.csv')
+write_feather(df,'./data-output/63kGovUKpublications.feather')
 
 # Dig out organisation from HTML - TODO
 # df$orgname <- str_extract(df$organisations,)
